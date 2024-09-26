@@ -56,7 +56,27 @@ List what you would improve in the codebase (current or in your new feature) in 
 
 ## Improvements:
 
-> List here what you would improve in the provided codebase as well as what you could improve in your new feature
-> if you had more time
+### Frontend
+>  Separated backend logic for fetching patient data into a separate service
+
+## Possible Improvements
+
+### Backend
+* **Error Handling**:
+  - Improve error messages for specific cases, such as invalid patient or molecule IDs.
+  - Add detailed validation responses for malformed requests.
+
+### Frontend
+* **Search Input Optimization**:
+  - Implement debouncing for the search input to reduce API calls while typing.
+  
+* **UI Enhancements**:
+  - Add a loading spinner during the molecule search and consider adding pagination or infinite scrolling for large datasets.
+
+* **Testing**:
+  - Expand unit tests and add integration tests to ensure that the new molecule search feature interacts seamlessly with the existing codebase.
+  
+* **State Management Refactor**:
+  - Consider moving the patient allergies state to a global store (e.g., Redux) to better manage state across components, improving scalability as more features are added.
 
 * ...
