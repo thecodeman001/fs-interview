@@ -50,7 +50,7 @@ const MoleculeSearch = ({ onMoleculeSelect, selectedMolecules }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [handleClickOutside]);
 
   const handleFocus = useCallback(() => {
     setShowMoleculeList(true);

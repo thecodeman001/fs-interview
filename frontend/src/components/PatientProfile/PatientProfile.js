@@ -19,22 +19,22 @@ const PatientProfile = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [allergies, setAllergies] = useState([]); 
 
-  const fetchData = async () => {
-    try {
-      const patientData = await fetchPatientData(id);
-      setPatientData(patientData);
-
-      const allergiesData = await fetchPatientAllergies(id);
-      setAllergies(allergiesData);
-    } catch (error) {
-      setErrorMessage({
-        title: 'Error fetching data',
-        details: error.message,
-      });
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const patientData = await fetchPatientData(id);
+        setPatientData(patientData);
+
+        const allergiesData = await fetchPatientAllergies(id);
+        setAllergies(allergiesData);
+      } catch (error) {
+        setErrorMessage({
+          title: 'Error fetching data',
+          details: error.message,
+        });
+      }
+    };
+    
     fetchData();
   }, [id]);
 
@@ -71,7 +71,7 @@ const PatientProfile = () => {
         toast.error('Failed to update allergies. Please try again later.');
       }
     },
-    [patientData]
+    [patientData, allergies, id]
   );
 
   if (errorMessage) {
