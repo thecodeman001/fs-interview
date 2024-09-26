@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef, useCallback} from 'react';
 import './MoleculeSearch.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { fetchMoleculeData } from '../../api/MoleculeService';
 
 const MoleculeSearch = ({ onMoleculeSelect, selectedMolecules }) => {
   const [searchText, setSearchText] = useState('');
@@ -11,14 +12,8 @@ const MoleculeSearch = ({ onMoleculeSelect, selectedMolecules }) => {
 
   const searchMolecules = async (query) => {
     try {
-      const response = await fetch(
-        `/api/v1/patients/molecules/search?query=${query}`
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch molecules');
-      }
-      const data = await response.json();
-      setMolecules(data);
+      const data = await fetchMoleculeData(query);
+      setMolecules(data || []);
     } catch (error) {
       console.error('Error fetching molecules:', error);
       toast.error('Failed to fetch molecules. Please try again later.');
@@ -29,22 +24,25 @@ const MoleculeSearch = ({ onMoleculeSelect, selectedMolecules }) => {
     onMoleculeSelect(moleculeId);
   };
 
-  const isSelected = (moleculeId) => {
-    return selectedMolecules.some((allergy) =>
-      typeof allergy === 'object'
-        ? allergy.id === moleculeId
-        : allergy === moleculeId
-    );
-  };
+  const isSelected = useCallback(
+    (moleculeId) => {
+      return selectedMolecules.some((allergy) =>
+        typeof allergy === 'object'
+          ? allergy.id === moleculeId
+          : allergy === moleculeId
+      );
+    },
+    [selectedMolecules]
+  );
 
-  const handleClickOutside = (event) => {
+  const handleClickOutside = useCallback((event) => {
     if (
       searchContainerRef.current &&
       !searchContainerRef.current.contains(event.target)
     ) {
-        setShowMoleculeList(false); 
+      setShowMoleculeList(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -54,12 +52,12 @@ const MoleculeSearch = ({ onMoleculeSelect, selectedMolecules }) => {
     };
   }, []);
 
-  const handleFocus = () => {
+  const handleFocus = useCallback(() => {
     setShowMoleculeList(true);
-    if (searchText == '') {
+    if (searchText === '') {
       searchMolecules('');
     }
-  };
+  }, [searchText]);
 
   return (
     <div className='molecule-search' ref={searchContainerRef}>
@@ -73,7 +71,7 @@ const MoleculeSearch = ({ onMoleculeSelect, selectedMolecules }) => {
           searchMolecules(e.target.value);
         }}
       />
-      {showMoleculeList && (
+      {showMoleculeList ? (
         <ul className='molecule-list'>
           {molecules.map((molecule) => (
             <li
@@ -85,7 +83,7 @@ const MoleculeSearch = ({ onMoleculeSelect, selectedMolecules }) => {
             </li>
           ))}
         </ul>
-      )}
+      ) : null}
       <ToastContainer />
     </div>
   );
