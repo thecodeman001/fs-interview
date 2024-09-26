@@ -55,4 +55,25 @@ public class PatientRepository {
                         rs.getString("name")
                 ), patientId);
     }
+
+    public List<Allergy> getAllMolecules() {
+        return this.jdbcTemplate.query(
+                "SELECT id, name FROM molecules",
+                (rs, rowNum) -> new Allergy(
+                        rs.getInt("id"),
+                        rs.getString("name")
+                )
+        );
+    }
+
+    public List<Allergy> searchMolecules(String query) {
+        String searchQuery = "%" + query.toLowerCase() + "%";
+        return this.jdbcTemplate.query(
+                "SELECT id, name FROM molecules WHERE LOWER(name) LIKE ?",
+                (rs, rowNum) -> new Allergy(
+                        rs.getInt("id"),
+                        rs.getString("name")
+                ), searchQuery);
+    }
+
 }

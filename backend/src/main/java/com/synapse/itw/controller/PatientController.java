@@ -53,4 +53,17 @@ public class PatientController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @GetMapping("/molecules/search")
+    public ResponseEntity<List<Allergy>> searchMolecules(@RequestParam String query) {
+        if (query == null) {
+            return ResponseEntity.badRequest().build();  // Validate the input
+        }
+        if(query.trim().isEmpty()){
+            return ResponseEntity.ok(patientService.getAllergies());
+        }
+        List<Allergy> molecules = patientService.searchMolecules(query);
+        return ResponseEntity.ok(molecules);
+    }
+
 }

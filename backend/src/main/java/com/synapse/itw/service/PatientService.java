@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class PatientService {
 
@@ -31,4 +32,14 @@ public class PatientService {
     public List<Allergy> getPatientAllergies(int patientId) {
         return patientRepository.getAllergies(patientId);
     }
+
+    public List<Allergy> getAllergies(){return patientRepository.getAllMolecules();}
+
+    public List<Allergy> searchMolecules(String query) {
+        if (query == null || query.isBlank()) {
+            throw new IllegalArgumentException("Query cannot be empty");
+        }
+        return patientRepository.searchMolecules(query);
+    }
+
 }
