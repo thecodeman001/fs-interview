@@ -23,6 +23,11 @@ jobs:
       working-directory: ./backend
       run: mvn -B package --file pom.xml
 
+    # Docker build for backend
+    - name: Build Backend Docker Image
+      working-directory: ./backend
+      run: docker build -t sh-be-image:latest .
+
   build-frontend:
     runs-on: ubuntu-latest
     steps:
@@ -37,3 +42,8 @@ jobs:
     - name: Build
       working-directory: ./frontend
       run: npm run build
+
+    # Docker build for frontend
+    - name: Build Frontend Docker Image
+      working-directory: ./frontend
+      run: docker build -t sh-fe-image:latest .
